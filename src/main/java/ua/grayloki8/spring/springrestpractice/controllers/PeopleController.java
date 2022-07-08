@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ua.grayloki8.spring.springrestpractice.dto.PersonDTO;
 import ua.grayloki8.spring.springrestpractice.models.Person;
 import ua.grayloki8.spring.springrestpractice.sevices.PeopleService;
 import ua.grayloki8.spring.util.PersonErrorResponse;
@@ -13,6 +14,7 @@ import ua.grayloki8.spring.util.PersonNotCreatedException;
 import ua.grayloki8.spring.util.PersonNotFoundException;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -39,7 +41,7 @@ public class PeopleController {
 
     }
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Person person, BindingResult bindingResult){
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             StringBuilder errorMassage=new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -50,12 +52,24 @@ public class PeopleController {
             }
             throw new PersonNotCreatedException(errorMassage.toString());
         }
-        peopleService.save(person);
+        peopleService.save(convertToPerson(personDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    private Person convertToPerson(PersonDTO personDTO) {
+        Person person = new Person();
+        person.setName(personDTO.getName());
+        person.setAge(personDTO.getAge());
+        person.setEmail(personDTO.getEmail());
+        return person;
+    }
+
+
+
     @ExceptionHandler
     private ResponseEntity<PersonErrorResponse> handleException(PersonNotCreatedException e){
         PersonErrorResponse response = new PersonErrorResponse(e.getMessage(), System.currentTimeMillis());
+
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
 
     }

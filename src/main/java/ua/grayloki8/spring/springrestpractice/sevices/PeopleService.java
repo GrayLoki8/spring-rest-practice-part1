@@ -7,6 +7,7 @@ import ua.grayloki8.spring.springrestpractice.models.Person;
 import ua.grayloki8.spring.springrestpractice.repositories.PeopleRepository;
 import ua.grayloki8.spring.util.PersonNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,7 +27,13 @@ public class PeopleService {
     }
     @Transactional
     public void save(Person person){
+        enrichPerson(person);
         peopleRepository.save(person);
 
+    }
+    private void enrichPerson(Person person) {
+        person.setCreatedAt(LocalDateTime.now());
+        person.setUpdatedAt(LocalDateTime.now());
+        person.setCreatedWho("Admin");
     }
 }
