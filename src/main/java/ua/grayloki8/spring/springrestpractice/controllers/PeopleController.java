@@ -1,5 +1,6 @@
 package ua.grayloki8.spring.springrestpractice.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,16 @@ import ua.grayloki8.spring.util.PersonNotCreatedException;
 import ua.grayloki8.spring.util.PersonNotFoundException;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/people")
 public class PeopleController {
-
+    private ModelMapper modelMapper;
     private PeopleService peopleService;
     @Autowired
-    public PeopleController(PeopleService peopleService) {
+    public PeopleController(ModelMapper modelMapper, PeopleService peopleService) {
+        this.modelMapper = modelMapper;
         this.peopleService = peopleService;
     }
     @GetMapping()
@@ -57,11 +58,11 @@ public class PeopleController {
     }
 
     private Person convertToPerson(PersonDTO personDTO) {
-        Person person = new Person();
-        person.setName(personDTO.getName());
-        person.setAge(personDTO.getAge());
-        person.setEmail(personDTO.getEmail());
-        return person;
+
+
+        return modelMapper.map(personDTO, Person.class);
+
+
     }
 
 
