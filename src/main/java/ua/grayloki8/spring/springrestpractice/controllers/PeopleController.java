@@ -1,12 +1,13 @@
 package ua.grayloki8.spring.springrestpractice.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ua.grayloki8.spring.springrestpractice.models.Person;
 import ua.grayloki8.spring.springrestpractice.sevices.PeopleService;
+import ua.grayloki8.spring.util.PersonErrorResponse;
+import ua.grayloki8.spring.util.PersonNotFoundException;
 
 import java.util.List;
 
@@ -26,5 +27,11 @@ public class PeopleController {
     @GetMapping("/{id}")
     public Person getPerson(@PathVariable("id")int id){
         return     peopleService.findOne(id);
+    }
+    @ExceptionHandler
+    private ResponseEntity<PersonErrorResponse> handleException(PersonNotFoundException e){
+        PersonErrorResponse response = new PersonErrorResponse("Person with this id wasn't found", System.currentTimeMillis());
+        return new ResponseEntity(response, HttpStatus.NOT_FOUND);
+
     }
 }

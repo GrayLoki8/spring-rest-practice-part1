@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.grayloki8.spring.springrestpractice.models.Person;
 import ua.grayloki8.spring.springrestpractice.repositories.PeopleRepository;
+import ua.grayloki8.spring.util.PersonNotFoundException;
 
 import java.util.List;
 
@@ -21,6 +22,6 @@ public class PeopleService {
         return peopleRepository.findAll();
     }
     public Person findOne(int id){
-        return peopleRepository.findById(id).orElse(null);
+        return peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 }
