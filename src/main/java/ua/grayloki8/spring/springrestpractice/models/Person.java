@@ -3,6 +3,10 @@ package ua.grayloki8.spring.springrestpractice.models;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +18,14 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
+    @NotEmpty(message = "Name should not be empty")
+    @Size(message = "Size must me from 2 to 30 character")
     private String name;
+    @Min(value = 0,message = "Age must be greater than 0")
     @Column(name = "age")
 
     private int age;
+    @Email
     @Column(name = "email")
     private String email;
 
